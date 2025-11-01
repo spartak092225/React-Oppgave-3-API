@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { CountriesContext } from '../CountriesContext';
+import Modal from '../components/Modal';
 import styles from './Country.module.css';
 
 export default function Favorites() {
@@ -7,6 +8,7 @@ export default function Favorites() {
     useContext(CountriesContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [favCountries, setFavCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     const favs = allCountries.filter((c) => favorites.includes(c.cca3));
@@ -23,6 +25,14 @@ export default function Favorites() {
   );
   const totalPages = Math.ceil(favCountries.length / countriesPerPage);
 
+  const openModal = (country) => {
+    setSelectedCountry(country);
+  };
+
+  const closeModal = () => {
+    setSelectedCountry(null);
+  };
+
   return (
     <div className={styles.countriesContainer}>
       {currentCountries.length === 0 ? (
@@ -34,6 +44,7 @@ export default function Favorites() {
               <li
                 key={c.cca3}
                 className={styles.country}
+                onClick={() => openModal(c)}
               >
                 <img
                   src={c.flags.png}
@@ -88,6 +99,40 @@ export default function Favorites() {
             </div>
           )}
         </>
+      )}
+
+      {selectedCountry && (
+        <Modal onClose={closeModal}>
+          <div className={styles.modalContent}>
+            <h2>{selectedCountry.name.common}</h2>
+            <img
+              src={selectedCountry.flags.png}
+              alt={selectedCountry.name.common}
+              className={styles.flag}
+              width={200}
+            />
+            <p>
+              <strong>Capital:</strong>
+              {selectedCountry.capital[0] || 'N/A'}
+            </p>
+            <p>
+              <strong>Region:</strong> {selectedCountry.region}
+            </p>
+            <p>
+              <strong>Subregion:</strong> {selectedCountry.subregion || 'N/A'}
+            </p>
+            <p>
+              <strong>Population:</strong>{' '}
+              {selectedCountry.population.toLocaleString() || 'N/A'}
+            </p>
+            <p>
+              <strong>Phone code:</strong> {selectedCountry.idd.root}
+              {selectedCountry.idd.suffixes
+                ? selectedCountry.idd.suffixes[0]
+                : ''}
+            </p>
+          </div>
+        </Modal>
       )}
     </div>
   );

@@ -1,22 +1,20 @@
-import './Modal.css';
+import styles from './Modal.module.css';
 
-export default function Modal({ isOpen, onClose, children }) {
-  if (!isOpen) return null;
-
+export default function Modal({ children, onClose }) {
   return (
     <div
-      className="modal-overlay"
+      className={styles.modalBackdrop}
       onClick={onClose}
     >
       <div
-        className="modal-content"
-        onClick={(e) => e.stopPropagation()}
+        className={styles.modalContainer}
+        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         <button
-          className="modal-close"
+          className={styles.closeBtn}
           onClick={onClose}
         >
-          x
+          ✕
         </button>
         {children}
       </div>
