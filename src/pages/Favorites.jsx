@@ -16,7 +16,7 @@ export default function Favorites() {
     setCurrentPage(1);
   }, [allCountries, favorites]);
 
-  const countriesPerPage = 12;
+  const countriesPerPage = 10;
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = favCountries.slice(
@@ -105,13 +105,17 @@ export default function Favorites() {
       {selectedCountry && (
         <Modal onClose={closeModal}>
           <div className={styles.modalContent}>
-            <h2>{selectedCountry.name.common}</h2>
-            <img
-              src={selectedCountry.flags.png}
-              alt={selectedCountry.name.common}
-              className={styles.flag}
-              width={200}
-            />
+            <div className={styles.flagAndName}>
+              <img
+                src={selectedCountry.flags.png}
+                alt={selectedCountry.name.common}
+                className={styles.flagModal}
+                width={200}
+              />
+              <h2 className={styles.nameModal}>
+                {selectedCountry.name.common}
+              </h2>
+            </div>
             <p>
               <strong>Capital:</strong>
               {selectedCountry.capital[0] || 'N/A'}

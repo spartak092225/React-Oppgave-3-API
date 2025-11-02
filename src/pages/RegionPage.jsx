@@ -60,7 +60,7 @@ export default function RegionPage({ region }) {
                   className={styles.flag}
                 />
                 <div className={styles.info}>
-                  <p className={styles.countryName}>{c.name.common}</p>
+                  <h2>{c.name.common}</h2>
                   <p className={styles.capital}>
                     <strong>Capital:</strong> {c.capital?.[0] || 'N/A'}
                   </p>
@@ -72,7 +72,6 @@ export default function RegionPage({ region }) {
                     {c.population?.toLocaleString() || 'N/A'}
                   </p>
                 </div>
-
                 <label
                   htmlFor={`fav-${c.cca3}`}
                   className={styles.favoriteLbl}
@@ -115,31 +114,35 @@ export default function RegionPage({ region }) {
       {selectedCountry && (
         <Modal onClose={closeModal}>
           <div className={styles.modalContent}>
-            <h2>{selectedCountry.name.common}</h2>
-            <img
-              src={selectedCountry.flags.png}
-              alt={selectedCountry.name.common}
-              className={styles.flag}
-              width={200}
-            />
+            <div className={styles.flagAndName}>
+              <img
+                src={selectedCountry.flags.png}
+                alt={selectedCountry.name.common}
+                className={styles.flagModal}
+                width={200}
+              />
+              <h2 className={styles.nameModal}>
+                {selectedCountry.name.common}
+              </h2>
+            </div>
             <p>
-              <strong>Capital:</strong>
+              <strong>Capital: </strong>
               {selectedCountry.capital[0] || 'N/A'}
             </p>
             <p>
-              <strong>Region:</strong>
+              <strong>Region: </strong>
               {selectedCountry.region}
             </p>
             <p>
-              <strong>Subregion:</strong>
+              <strong>Subregion: </strong>
               {selectedCountry.subregion || 'N/A'}
             </p>
             <p>
-              <strong>Population:</strong>{' '}
+              <strong>Population: </strong>{' '}
               {selectedCountry.population.toLocaleString || 'N/A'}
             </p>
             <p>
-              <strong>Phone code:</strong>
+              <strong>Phone code: </strong>
               {selectedCountry.idd.root}
               {selectedCountry.idd.suffixes
                 ? selectedCountry.idd.suffixes[0]

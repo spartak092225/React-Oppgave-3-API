@@ -14,7 +14,7 @@ export default function Home() {
     setCurrentPage(1);
   }, [countries]);
 
-  const countriesPerPage = 12;
+  const countriesPerPage = 10;
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = countries.slice(firstCountryIndex, lastCountryIndex);
@@ -48,17 +48,19 @@ export default function Home() {
                     alt={c.name.common}
                     className={styles.flag}
                   />
-                  <p className={styles.countryName}>{c.name.common}</p>
-                  <p className={styles.capital}>
-                    <strong>Capital:</strong> {c.capital?.[0] || 'N/A'}
-                  </p>
-                  <p className={styles.region}>
-                    <strong>Region:</strong> {c.region}
-                  </p>
-                  <p className={styles.population}>
-                    <strong>Population:</strong>{' '}
-                    {c.population?.toLocaleString() || 'N/A'}
-                  </p>
+                  <div className={styles.info}>
+                    <h2>{c.name.common}</h2>
+                    <p className={styles.capital}>
+                      <strong>Capital:</strong> {c.capital?.[0] || 'N/A'}
+                    </p>
+                    <p className={styles.region}>
+                      <strong>Region:</strong> {c.region}
+                    </p>
+                    <p className={styles.population}>
+                      <strong>Population:</strong>{' '}
+                      {c.population?.toLocaleString() || 'N/A'}
+                    </p>
+                  </div>
 
                   <label
                     htmlFor={`fav-${c.cca3}`}
@@ -102,13 +104,17 @@ export default function Home() {
         {selectedCountry && (
           <Modal onClose={closeModal}>
             <div className={styles.modalContent}>
-              <h2>{selectedCountry.name.common}</h2>
-              <img
-                src={selectedCountry.flags.png}
-                alt={selectedCountry.name.common}
-                className={styles.flag}
-                width={200}
-              />
+              <div className={styles.flagAndName}>
+                <img
+                  src={selectedCountry.flags.png}
+                  alt={selectedCountry.name.common}
+                  className={styles.flagModal}
+                  width={200}
+                />
+                <h2 className={styles.nameModal}>
+                  {selectedCountry.name.common}
+                </h2>
+              </div>
               <p>
                 <strong>Capital:</strong> {selectedCountry.capital[0] || 'N/A'}
               </p>
