@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 import { CountriesContext } from "../CountriesContext";
+import globe from "../../public/globe.png";
+import heartFilled from "../../public/heart-filled.png";
 
 export function Header() {
   const { allCountries, setCountries, favorites } =
@@ -70,7 +72,7 @@ export function Header() {
     <div className="header">
       <div className="header-top">
         <Link to="/" onClick={handleLogoClick}>
-          <img src="globe.png" alt="globe icon" className="logo" width={30} />
+          <img src={globe} alt="globe icon" className="logo" width={30} />
         </Link>
 
         <form onSubmit={(e) => e.preventDefault()}>
@@ -84,7 +86,7 @@ export function Header() {
 
         <Link to="/Favorites" className="favorite-btn">
           <img
-            src="/heart-filled.png"
+            src={heartFilled}
             alt="favorite icon"
             className="favoriteIcon"
             width={20}
