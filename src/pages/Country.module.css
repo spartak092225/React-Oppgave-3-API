@@ -82,7 +82,7 @@ button:disabled {
 
 .favoriteBtn {
   appearance: none;
-  content: url(public/heart-empty.png);
+  content: url(heart-empty.png);
   filter: invert(1);
   width: 20px;
   border: none;
@@ -90,7 +90,7 @@ button:disabled {
 
 .favoriteIcon {
   appearance: none;
-  /* content: url(public/heart-empty.png); */
+  /* content: url(heart-empty.png); */
   filter: invert(1);
   width: 30px;
   border: none;
@@ -104,7 +104,7 @@ button:disabled {
 }
 
 .favoriteBtn:checked {
-  content: url(public/heart-filled.png);
+  content: url(heart-filled.png);
   filter: invert(0);
   width: 20px;
 }
