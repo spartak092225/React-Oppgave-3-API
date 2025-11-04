@@ -4,5 +4,5 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/React-Oppgave-3-API/",
+  base: "/React-Oppgave-4-API/",
 });
