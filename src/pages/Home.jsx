@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from 'react';
-import { CountriesContext } from '../CountriesContext';
-import Modal from '../components/Modal';
-import styles from './Country.module.css';
+import { useContext, useState, useEffect } from "react";
+import { CountriesContext } from "../CountriesContext";
+import Modal from "../components/Modal";
+import styles from "./Country.module.css";
 
 export default function Home() {
   const { countries, loading, error, favorites, toggleFavorite } =
@@ -51,14 +51,14 @@ export default function Home() {
                   <div className={styles.info}>
                     <h2>{c.name.common}</h2>
                     <p className={styles.capital}>
-                      <strong>Capital:</strong> {c.capital?.[0] || 'N/A'}
+                      <strong>Capital:</strong> {c.capital?.[0] || "N/A"}
                     </p>
                     <p className={styles.region}>
                       <strong>Region:</strong> {c.region}
                     </p>
                     <p className={styles.population}>
-                      <strong>Population:</strong>{' '}
-                      {c.population?.toLocaleString() || 'N/A'}
+                      <strong>Population:</strong>{" "}
+                      {c.population?.toLocaleString() || "N/A"}
                     </p>
                   </div>
 
@@ -116,23 +116,23 @@ export default function Home() {
                 </h2>
               </div>
               <p>
-                <strong>Capital:</strong> {selectedCountry.capital[0] || 'N/A'}
+                <strong>Capital:</strong> {selectedCountry.capital[0] || "N/A"}
               </p>
               <p>
                 <strong>Region:</strong> {selectedCountry.region}
               </p>
               <p>
-                <strong>Subregion:</strong> {selectedCountry.subregion || 'N/A'}
+                <strong>Subregion:</strong> {selectedCountry.subregion || "N/A"}
               </p>
               <p>
-                <strong>Population:</strong>{' '}
-                {selectedCountry.population.toLocaleString() || 'N/A'}
+                <strong>Population:</strong>{" "}
+                {selectedCountry.population.toLocaleString() || "N/A"}
               </p>
               <p>
                 <strong>Phone code:</strong> {selectedCountry.idd.root}
                 {selectedCountry.idd.suffixes
                   ? selectedCountry.idd.suffixes[0]
-                  : ''}
+                  : ""}
               </p>
             </div>
           </Modal>
