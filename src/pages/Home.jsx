@@ -14,7 +14,7 @@ export default function Home() {
     setCurrentPage(1);
   }, [countries]);
 
-  const countriesPerPage = 10;
+  const countriesPerPage = 24;
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = countries.slice(firstCountryIndex, lastCountryIndex);

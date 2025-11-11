@@ -3,6 +3,19 @@ import { CountriesContext } from "../CountriesContext";
 import Modal from "../components/Modal";
 import styles from "./Country.module.css";
 
+// HELPER FUNCTION: Calculates items per page based on window width
+const getItemsPerPage = () => {
+  const width = window.innerWidth;
+
+  if (width <= 550) {
+    return 8; // Mobile view (matches max-width: 550px)
+  }
+  if (width <= 1200) {
+    return 12; // Tablet view (matches max-width: 1200px)
+  }
+  return 24; // Default desktop view
+};
+
 export default function RegionPage({ region }) {
   const {
     allCountries,
@@ -15,40 +28,52 @@ export default function RegionPage({ region }) {
   } = useContext(CountriesContext);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [countriesPerPage, setCountriesPerPage] = useState(10);
+  const [countriesPerPage, setCountriesPerPage] = useState(getItemsPerPage());
 
   // Update countries when region changes
   useEffect(() => {
     setCountries(allCountries.filter((c) => c.region === region));
   }, [allCountries, region, setCountries]);
 
-  // Reset page when countries change
+  // Reset page to 1 when countries list changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [countries]);
+  }, [countries]); // This is correct
 
-  // Dynamic calculation of countries per page
+  // Updates countriesPerPage when window is resized
   useEffect(() => {
-    function updateCountriesPerPage() {
-      // Total available height (minus some header or padding if needed)
-      const headerHeight = 120; // adjust to your layout
-      const availableHeight = window.innerHeight - headerHeight;
+    const handleResize = () => {
+      setCountriesPerPage(getItemsPerPage());
+    };
 
-      // Height of a country card (including gap)
-      const cardHeight = 230 + 32; // your card height + gap
-      const perPage = Math.floor(availableHeight / cardHeight) * Math.floor(4); // optional: multiply by columns if you use grid
-      setCountriesPerPage(Math.max(1, perPage));
-    }
-
-    updateCountriesPerPage();
-    window.addEventListener("resize", updateCountriesPerPage);
-    return () => window.removeEventListener("resize", updateCountriesPerPage);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // --- NEWLY ADDED: FIXES THE STALE PAGE BUG ---
+  // This effect runs *after* countriesPerPage or countries list changes
+  useEffect(() => {
+    // Recalculate total pages based on the *new* state
+    const newTotalPages = Math.ceil(countries.length / countriesPerPage);
+
+    // If the list is empty, reset to page 1
+    if (newTotalPages === 0) {
+      setCurrentPage(1);
+    }
+    // If the current page is now invalid (greater than total pages)
+    // reset it to the *last* valid page.
+    else if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages);
+    }
+  }, [countriesPerPage, countries.length, currentPage]); // Re-run if these change
+
+  // --- All your existing logic below this line is correct ---
+
+  // These calculations now run *after* the state has been corrected
+  const totalPages = Math.ceil(countries.length / countriesPerPage);
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = countries.slice(firstCountryIndex, lastCountryIndex);
-  const totalPages = Math.ceil(countries.length / countriesPerPage);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const openModal = (country) => setSelectedCountry(country);
@@ -103,6 +128,7 @@ export default function RegionPage({ region }) {
             ))}
           </ul>
 
+          {/* This check is now robust */}
           {countries.length > countriesPerPage && (
             <div className={styles.pagination}>
               <button
@@ -112,10 +138,11 @@ export default function RegionPage({ region }) {
                 Previous
               </button>
               <span>
-                Page {currentPage} of {totalPages}
+                {/* Ensure totalPages isn't 0 */}
+                Page {currentPage} of {totalPages || 1}
               </span>
               <button
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
                 Next

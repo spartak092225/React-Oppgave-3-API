@@ -1,12 +1,8 @@
-.countriesContainer {
-  height: 100vh;
-}
 .countryList {
   height: auto;
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
-  /* grid-template-rows: repeat(auto-fill, minmax(230px, 230px)); */
   gap: 2rem;
   padding: 0 30px;
   list-style: none;

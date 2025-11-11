@@ -16,7 +16,7 @@ export default function Favorites() {
     setCurrentPage(1);
   }, [allCountries, favorites]);
 
-  const countriesPerPage = 10;
+  const countriesPerPage = 24;
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = favCountries.slice(
