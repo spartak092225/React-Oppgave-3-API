@@ -106,6 +106,18 @@ export default function Favorites() {
 
       {selectedCountry && (
         <Modal onClose={closeModal}>
+          <label
+            htmlFor={`fav-modal-${selectedCountry.cca3}`}
+            className={styles.favoriteLbl}
+          >
+            <input
+              type="checkbox"
+              className={styles.favoriteBtn}
+              id={`fav-modal-${selectedCountry.cca3}`}
+              checked={favorites.includes(selectedCountry.cca3)}
+              onChange={() => toggleFavorite(selectedCountry.cca3)}
+            />
+          </label>
           <div className={styles.modalContent}>
             <div className={styles.flagAndName}>
               <img
@@ -117,18 +129,6 @@ export default function Favorites() {
               <h2 className={styles.nameModal}>
                 {selectedCountry.name.common}
               </h2>
-              <label
-                htmlFor={`fav-modal-${selectedCountry.cca3}`}
-                className={styles.favoriteLbl}
-              >
-                <input
-                  type="checkbox"
-                  className={styles.favoriteBtn}
-                  id={`fav-modal-${selectedCountry.cca3}`}
-                  checked={favorites.includes(selectedCountry.cca3)}
-                  onChange={() => toggleFavorite(selectedCountry.cca3)}
-                />
-              </label>
             </div>
             <p>
               <strong>Capital: </strong>

@@ -12,7 +12,7 @@
 }
 
 .modalContainer {
-  background: #e2e4ff;
+  background: #d3d6ff;
   color: black;
   padding: 2rem;
   border-radius: 12px;
@@ -25,7 +25,7 @@
 .closeBtn {
   color: black;
   position: absolute;
-  top: 10px;
+  top: 25px;
   right: 10px;
   background: transparent;
   border: none;
@@ -38,4 +38,7 @@
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+.favoriteBtn {
 }
