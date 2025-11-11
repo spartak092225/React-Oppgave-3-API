@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -6,8 +7,7 @@
 }
 
 body {
-  /*background: url("public/background.jpg");
-*/
+  min-height: 100vh;
   background: #0f0f0f;
   font-family: "Manrope", sans-serif;
   padding: 10px 20px 20px 20px;

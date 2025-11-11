@@ -15,30 +15,44 @@ export default function RegionPage({ region }) {
   } = useContext(CountriesContext);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [countriesPerPage, setCountriesPerPage] = useState(10);
 
+  // Update countries when region changes
   useEffect(() => {
     setCountries(allCountries.filter((c) => c.region === region));
   }, [allCountries, region, setCountries]);
 
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
+  // Reset page when countries change
   useEffect(() => {
     setCurrentPage(1);
   }, [countries]);
 
-  const countriesPerPage = 10;
+  // Dynamic calculation of countries per page
+  useEffect(() => {
+    function updateCountriesPerPage() {
+      // Total available height (minus some header or padding if needed)
+      const headerHeight = 120; // adjust to your layout
+      const availableHeight = window.innerHeight - headerHeight;
+
+      // Height of a country card (including gap)
+      const cardHeight = 230 + 32; // your card height + gap
+      const perPage = Math.floor(availableHeight / cardHeight) * Math.floor(4); // optional: multiply by columns if you use grid
+      setCountriesPerPage(Math.max(1, perPage));
+    }
+
+    updateCountriesPerPage();
+    window.addEventListener("resize", updateCountriesPerPage);
+    return () => window.removeEventListener("resize", updateCountriesPerPage);
+  }, []);
+
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = countries.slice(firstCountryIndex, lastCountryIndex);
   const totalPages = Math.ceil(countries.length / countriesPerPage);
 
-  const openModal = (country) => {
-    setSelectedCountry(country);
-  };
-
-  const closeModal = () => {
-    setSelectedCountry(null);
-  };
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const openModal = (country) => setSelectedCountry(country);
+  const closeModal = () => setSelectedCountry(null);
 
   return (
     <div className={styles.countriesContainer}>
@@ -61,13 +75,13 @@ export default function RegionPage({ region }) {
                 />
                 <div className={styles.info}>
                   <h2>{c.name.common}</h2>
-                  <p className={styles.capital}>
+                  <p>
                     <strong>Capital:</strong> {c.capital?.[0] || "N/A"}
                   </p>
-                  <p className={styles.region}>
+                  <p>
                     <strong>Region:</strong> {c.region}
                   </p>
-                  <p className={styles.population}>
+                  <p>
                     <strong>Population:</strong>{" "}
                     {c.population?.toLocaleString() || "N/A"}
                   </p>
@@ -151,7 +165,7 @@ export default function RegionPage({ region }) {
             </p>
             <p>
               <strong>Population: </strong>{" "}
-              {selectedCountry.population.toLocaleString || "N/A"}
+              {selectedCountry.population.toLocaleString() || "N/A"}
             </p>
             <p>
               <strong>Phone code: </strong>

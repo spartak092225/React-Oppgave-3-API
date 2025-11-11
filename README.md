@@ -11,7 +11,7 @@ Appen henter data fra **REST Countries API** og tilbyr søk, filtrering etter re
 - 🌎 **Filtrering etter region** (Afrika, Asia, Europa, Oseania, Amerika)
 - ❤️ **Legg til/fjern favoritter** – lagres i `localStorage`
 - 🪟 **Modal-visning** for detaljer om hvert land
-- 📱 **Responsivt design** for mobil, nettbrett og PC
+- 📱 **Responsivt design** for mobil og PC
 - ⚡ **Klient-side routing** via React Router (`HashRouter`)
 - 💾 **Vedvarende tilstand** med React Context API
 
