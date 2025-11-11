@@ -1,21 +1,19 @@
 .countriesContainer {
   height: 100vh;
-  overflow-y: auto; /* allows scrolling if content overflows */
-  padding-bottom: 2rem;
 }
-
 .countryList {
+  height: auto;
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+  /* grid-template-rows: repeat(auto-fill, minmax(230px, 230px)); */
   gap: 2rem;
   padding: 0 30px;
   list-style: none;
 }
 
 .country {
-  width: 100%;
-  max-width: 200px;
+  width: 200px;
   height: 230px;
   border: 1px solid #d3d5fd;
   box-shadow: 0px 0px 7px #d7d388;
@@ -59,7 +57,6 @@ h2 {
   gap: 1rem;
   color: white;
 }
-
 span {
   font-size: 0.75rem;
 }
@@ -70,7 +67,9 @@ button {
   background: transparent;
   border: 2px solid white;
   border-radius: 6px;
+  background: transparent;
   cursor: pointer;
+  color: white;
   font-size: 0.75rem;
 }
 
@@ -84,27 +83,34 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Heart/Favorite button as background image */
 .favoriteBtn {
   appearance: none;
+  content: url(/heart-empty.png);
   filter: invert(1);
   width: 20px;
-  height: 20px;
   border: none;
-  cursor: pointer;
-  background: url("/heart-empty.png") no-repeat center/contain;
 }
 
-.favoriteBtn:checked {
-  filter: invert(0);
-  background: url("/heart-filled.png") no-repeat center/contain;
+.favoriteIcon {
+  appearance: none;
+  /* content: url(/heart-empty.png); */
+  filter: invert(1);
+  width: 30px;
+  border: none;
 }
 
 .favoriteLbl {
   margin-top: 5px;
-  display: inline-flex;
+
+  display: inline;
   flex-shrink: 0;
   border: none;
+}
+
+.favoriteBtn:checked {
+  content: url(/heart-filled.png);
+  filter: invert(0);
+  width: 20px;
 }
 
 .flagModal {
@@ -118,10 +124,11 @@ button:disabled {
 
 @media screen and (max-width: 1200px) {
   .country {
-    max-width: 180px;
+    width: 180px;
     height: 220px;
+    padding: 0.75rem;
+    justify-self: center;
   }
-
   h2 {
     font-size: 1rem;
   }
@@ -133,13 +140,13 @@ button:disabled {
   .flag {
     width: 80px;
     height: 60px;
+    object-fit: contain;
   }
 }
 
 @media screen and (max-width: 550px) {
   .country {
-    width: 90%;
-    max-width: 340px;
+    width: 340px;
     height: 100px;
     padding: 0.75rem;
     flex-direction: row;
@@ -149,15 +156,15 @@ button:disabled {
   .flag {
     width: 80px;
     height: 80px;
+    object-fit: contain;
   }
 
   .countryList {
+    height: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 0 10px;
-    gap: 1rem;
+    justify-content: center;
   }
 
   h2 {
