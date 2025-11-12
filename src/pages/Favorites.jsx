@@ -3,27 +3,78 @@ import { CountriesContext } from "../CountriesContext";
 import Modal from "../components/Modal";
 import styles from "./Country.module.css";
 
+// HELPER FUNCTION: Calculates items per page based on window width
+
+const getItemsPerPage = () => {
+  const width = window.innerWidth;
+
+  if (width <= 720) {
+    return 10;
+  }
+  if (width <= 1150) {
+    return 12;
+  }
+  if (width <= 1350) {
+    return 15;
+  }
+  if (width <= 1600) {
+    return 12;
+  }
+  return 27;
+};
+
 export default function Favorites() {
   const { allCountries, favorites, toggleFavorite } =
     useContext(CountriesContext);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [favCountries, setFavCountries] = useState([]);
+  // UPDATED: countriesPerPage is now dynamic state
+  const [countriesPerPage, setCountriesPerPage] = useState(getItemsPerPage());
   const [selectedCountry, setSelectedCountry] = useState(null);
 
+  // 1. Logic to filter and update favorite countries list
+  // Also resets the page to 1 whenever favorites change.
   useEffect(() => {
     const favs = allCountries.filter((c) => favorites.includes(c.cca3));
     setFavCountries(favs);
-    setCurrentPage(1);
+    // setCurrentPage(1); // Removed this, will use a dedicated useEffect below for better sync
   }, [allCountries, favorites]);
 
-  const countriesPerPage = 24;
+  // NEW: Updates countriesPerPage when window is resized
+  useEffect(() => {
+    const handleResize = () => {
+      setCountriesPerPage(getItemsPerPage());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // NEW: Fixes the stale page bug and resets page when favorites change
+  // We watch the length of the list AND the page size
+  useEffect(() => {
+    // If the favorites array is filtered (i.e., user added/removed one), recalculate and ensure page is valid.
+    const newTotalPages = Math.ceil(favCountries.length / countriesPerPage);
+
+    // If the list is empty or changes radically, reset to page 1
+    if (newTotalPages === 0 || currentPage === 1) {
+      setCurrentPage(1);
+    }
+    // If the current page is now invalid (greater than total pages)
+    else if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages); // Set to last valid page
+    }
+  }, [countriesPerPage, favCountries.length, currentPage]);
+
+  // Pagination calculations (Use the state values)
+  const totalPages = Math.ceil(favCountries.length / countriesPerPage);
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = favCountries.slice(
     firstCountryIndex,
     lastCountryIndex
   );
-  const totalPages = Math.ceil(favCountries.length / countriesPerPage);
 
   const openModal = (country) => {
     setSelectedCountry(country);
@@ -91,10 +142,10 @@ export default function Favorites() {
                 Previous
               </button>
               <span>
-                Page {currentPage} of {totalPages}
+                Page {currentPage} of {totalPages || 1}
               </span>
               <button
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
                 Next
@@ -144,7 +195,7 @@ export default function Favorites() {
             </p>
             <p>
               <strong>Population: </strong>{" "}
-              {selectedCountry.population.toLocaleString || "N/A"}
+              {selectedCountry.population?.toLocaleString() || "N/A"}
             </p>
             <p>
               <strong>Phone code: </strong>

@@ -3,23 +3,68 @@ import { CountriesContext } from "../CountriesContext";
 import Modal from "../components/Modal";
 import styles from "./Country.module.css";
 
+// HELPER FUNCTION: Calculates items per page based on window width
+
+const getItemsPerPage = () => {
+  const width = window.innerWidth;
+
+  if (width <= 720) {
+    return 10;
+  }
+  if (width <= 1150) {
+    return 12;
+  }
+  if (width <= 1350) {
+    return 15;
+  }
+  if (width <= 1600) {
+    return 12;
+  }
+  return 27;
+};
+
 export default function Home() {
   const { countries, loading, error, favorites, toggleFavorite } =
     useContext(CountriesContext);
-  const [currentPage, setCurrentPage] = useState(1);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  // UPDATED: countriesPerPage is now dynamic state
+  const [countriesPerPage, setCountriesPerPage] = useState(getItemsPerPage());
   const [selectedCountry, setSelectedCountry] = useState(null);
 
+  // Reset page to 1 when countries list changes
   useEffect(() => {
     setCurrentPage(1);
   }, [countries]);
 
-  const countriesPerPage = 24;
+  // NEW: Updates countriesPerPage when window is resized
+  useEffect(() => {
+    const handleResize = () => {
+      setCountriesPerPage(getItemsPerPage());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // NEW: Fixes the stale page bug when resizing
+  useEffect(() => {
+    const newTotalPages = Math.ceil(countries.length / countriesPerPage);
+
+    if (newTotalPages === 0) {
+      setCurrentPage(1);
+    } else if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages); // Set to last valid page
+    }
+  }, [countriesPerPage, countries.length, currentPage]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(countries.length / countriesPerPage);
   const lastCountryIndex = currentPage * countriesPerPage;
   const firstCountryIndex = lastCountryIndex - countriesPerPage;
   const currentCountries = countries.slice(firstCountryIndex, lastCountryIndex);
-  const totalPages = Math.ceil(countries.length / countriesPerPage);
 
+  // Modal logic
   const openModal = (country) => {
     setSelectedCountry(country);
   };
@@ -88,10 +133,10 @@ export default function Home() {
                   Previous
                 </button>
                 <span>
-                  Page {currentPage} of {totalPages}
+                  Page {currentPage} of {totalPages || 1}
                 </span>
                 <button
-                  disabled={currentPage === totalPages}
+                  disabled={currentPage === totalPages || totalPages === 0}
                   onClick={() => setCurrentPage(currentPage + 1)}
                 >
                   Next
@@ -141,7 +186,8 @@ export default function Home() {
               </p>
               <p>
                 <strong>Population: </strong>{" "}
-                {selectedCountry.population.toLocaleString || "N/A"}
+                {/* BUG FIX: Added () to toLocaleString */}
+                {selectedCountry.population?.toLocaleString() || "N/A"}
               </p>
               <p>
                 <strong>Phone code: </strong>
