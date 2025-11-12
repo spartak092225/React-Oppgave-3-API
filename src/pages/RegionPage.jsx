@@ -19,7 +19,7 @@ const getItemsPerPage = () => {
   if (width <= 1600) {
     return 12;
   }
-  return 24;
+  return 27;
 };
 
 export default function RegionPage({ region }) {
